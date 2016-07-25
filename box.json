@@ -1,0 +1,15 @@
+{
+    "directories": [
+    	"src"
+    ],
+    "finder": [
+        {
+            "name": "*.php",
+            "exclude": ["Tests"],
+            "in": "vendor"
+        }
+    ],
+    "main": "bin/main",
+    "output": "web-scraper.phar",
+    "stub": true
+}

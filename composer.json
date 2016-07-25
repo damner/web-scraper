@@ -7,5 +7,14 @@
             "email": "denis.vinokurov@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "symfony/console": "^3.1",
+        "symfony/debug": "^3.1",
+        "symfony/yaml": "^3.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "WebScraper\\": "src/"
+        }
+    }
 }
