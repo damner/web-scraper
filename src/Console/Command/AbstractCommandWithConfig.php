@@ -24,7 +24,6 @@ abstract class AbstractCommandWithConfig extends Command
         $data = $this->getConfigReader($input)->getArrayFromFile();
 
         $config = new Config();
-        $config->validateArray($data);
         $config->initFromArray($data);
 
         return $config;

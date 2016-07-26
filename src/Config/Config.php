@@ -4,8 +4,8 @@ namespace WebScraper\Config;
 
 use Symfony\Component\CssSelector\Exception\ParseException as CssSelectorParseException;
 use Symfony\Component\CssSelector\CssSelectorConverter;
-use RomaricDrigon\MetaYaml\MetaYaml;
-use RomaricDrigon\MetaYaml\Exception\NodeValidatorException;
+use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use WebScraper\Config\Exception\ValidationException;
 use WebScraper\Scraper\Request;
 use WebScraper\Scraper\Task;
@@ -36,6 +36,8 @@ class Config
 
     public function initFromArray(array $data)
     {
+        $data = $this->validateArray($data);
+
         $this->tasks = [];
 
         foreach ($data['tasks'] as $node) {
@@ -51,13 +53,13 @@ class Config
         }
     }
 
-    public function validateArray(array $data)
+    private function validateArray(array $data)
     {
-        $schema = new MetaYaml($this->getSchema(), true);
+        $processor = new Processor();
 
         try {
-            $schema->validate($data);
-        } catch (NodeValidatorException $e) {
+            $data = $processor->processConfiguration(new ConfigConfiguration(), [$data]);
+        } catch (InvalidConfigurationException $e) {
             throw new ValidationException($e->getMessage(), null, $e);
         }
 
@@ -72,47 +74,7 @@ class Config
                 }
             }
         }
-    }
 
-    private function getSchema()
-    {
-        return [
-            'root' => [
-                '_type' => 'array',
-                '_children' => [
-                    'tasks' => [
-                        '_type' => 'prototype',
-                        '_required' => true,
-                        '_prototype' => [
-                            '_type' => 'array',
-                            '_children' => [
-                                'name' => [
-                                    '_type' => 'text',
-                                    '_required' => true,
-                                ],
-                                'request' => [
-                                    '_type' => 'array',
-                                    '_required' => true,
-                                    '_children' => [
-                                        'url' => [
-                                            '_type' => 'text',
-                                            '_required' => true,
-                                        ],
-                                    ],
-                                ],
-                                'values' => [
-                                    '_type' => 'prototype',
-                                    '_required' => true,
-                                    '_prototype' => [
-                                        '_type' => 'text',
-                                        '_required' => true,
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ],
-            ],
-        ];
+        return $data;
     }
 }
