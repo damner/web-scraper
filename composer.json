@@ -10,7 +10,10 @@
     "require": {
         "symfony/console": "^3.1",
         "symfony/debug": "^3.1",
-        "symfony/yaml": "^3.1"
+        "symfony/yaml": "^3.1",
+        "guzzlehttp/guzzle": "^6.2",
+        "symfony/dom-crawler": "^3.1",
+        "symfony/css-selector": "^3.1"
     },
     "autoload": {
         "psr-4": {

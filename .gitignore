@@ -2,3 +2,4 @@ phpunit.xml
 composer.lock
 vendor/
 web-scraper.phar
+web-scraper.yaml

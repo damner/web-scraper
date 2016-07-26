@@ -3,5 +3,17 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
-$app = new WebScraper\App();
+Symfony\Component\Debug\Debug::enable();
+
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\InputOption;
+
+$app = new Application('WebScraper', '0.1');
+
+$definition = $app->getDefinition();
+$definition->addOption(new InputOption('config', '-c', InputOption::VALUE_OPTIONAL, 'Path to config file', './web-scraper.yaml'));
+
+$app->add(new WebScraper\Console\Command\TestCommand());
+$app->add(new WebScraper\Console\Command\TasksCommand());
+
 $app->run();
