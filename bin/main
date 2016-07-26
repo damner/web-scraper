@@ -15,5 +15,6 @@ $definition->addOption(new InputOption('config', '-c', InputOption::VALUE_OPTION
 
 $app->add(new WebScraper\Console\Command\TestCommand());
 $app->add(new WebScraper\Console\Command\TasksCommand());
+$app->add(new WebScraper\Console\Command\ValidateCommand());
 
 $app->run();

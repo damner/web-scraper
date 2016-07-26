@@ -3,12 +3,10 @@
 namespace WebScraper\Config\Reader;
 
 use Symfony\Component\Yaml\Yaml as YamlParser;
-use WebScraper\Config\Config;
+use Symfony\Component\Yaml\Exception\ParseException as YamlParseException;
 use WebScraper\Config\ReaderInterface;
-use WebScraper\Scraper\Request;
-use WebScraper\Scraper\Task;
-use WebScraper\Scraper\Value;
-use RuntimeException;
+use WebScraper\Config\Exception\FileNotFoundException;
+use WebScraper\Config\Exception\ParseException;
 
 class Yaml implements ReaderInterface
 {
@@ -19,30 +17,18 @@ class Yaml implements ReaderInterface
         $this->path = $path;
     }
 
-    public function getConfig()
+    public function getArrayFromFile()
     {
         if (!is_file($this->path)) {
-            throw new RuntimeException(sprintf('Config file "%s" not found.', $this->path));
+            throw new FileNotFoundException(sprintf('Config file "%s" not found.', $this->path));
         }
 
-        $data = YamlParser::parse(file_get_contents($this->path));
-
-        $config = new Config();
-
-        foreach ($data['tasks'] as $node) {
-            $request = new Request($node['request']['url']);
-
-            $task = new Task($node['name'], $request);
-
-            if (isset($node['values'])) {
-                foreach ($node['values'] as $key => $selector) {
-                    $task->addValue(new Value($key, $selector));
-                }
-            }
-
-            $config->addTask($task);
+        try {
+            $data = (array) YamlParser::parse(file_get_contents($this->path));
+        } catch (YamlParseException $e) {
+            throw new ParseException($e->getMessage(), null, $e);
         }
 
-        return $config;
+        return $data;
     }
 }

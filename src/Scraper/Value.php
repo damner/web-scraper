@@ -3,9 +3,7 @@
 namespace WebScraper\Scraper;
 
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\CssSelector\Exception\ParseException as CssSelectorParseException;
 use WebScraper\Scraper\Exception\ParseException;
-use InvalidArgumentException;
 
 class Value
 {
@@ -32,12 +30,16 @@ class Value
     {
         $crawler = new Crawler($content);
 
-        try {
-            return $crawler->filter($this->selector)->first()->text();
-        } catch (InvalidArgumentException $e) {
-            throw new ParseException($e->getMessage(), null, $e);
-        } catch (CssSelectorParseException $e) {
-            throw new ParseException($e->getMessage(), null, $e);
+        $nodes = $crawler->filter($this->selector);
+
+        if (count($nodes) === 0) {
+            throw new ParseException('Nodes not found.');
         }
+
+        if (count($nodes) > 1) {
+            throw new ParseException(sprintf('Found %s nodes.', count($nodes)));
+        }
+
+        return $nodes->first()->text();
     }
 }
