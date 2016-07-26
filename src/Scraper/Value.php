@@ -4,6 +4,7 @@ namespace WebScraper\Scraper;
 
 use Symfony\Component\DomCrawler\Crawler;
 use WebScraper\Scraper\Exception\ParseException;
+use WebScraper\Scraper\Result\Value as Result;
 
 class Value
 {
@@ -26,7 +27,18 @@ class Value
         return $this->selector;
     }
 
-    public function parse($content)
+    public function getResult($content)
+    {
+        try {
+            $result = $this->parse($content);
+        } catch (ParseException $e) {
+            return new Result($this->getName(), $e);
+        }
+
+        return new Result($this->getName(), null, $result);
+    }
+
+    private function parse($content)
     {
         $crawler = new Crawler($content);
 

@@ -59,7 +59,7 @@ class TestCommand extends AbstractCommandWithConfig
         $style->section($task->getName());
         $style->block($task->getRequest()->getUrl());
 
-        $result = $task->run();
+        $result = $task->getResult();
 
         if ($result->getError()) {
             $style->error($result->getError()->getMessage());

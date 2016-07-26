@@ -30,16 +30,11 @@ class TasksCommand extends AbstractCommandWithConfig
         $style->section($task->getName());
         $style->block($task->getRequest()->getUrl());
 
-        $values = $task->getValues();
-        if (!count($values)) {
-            $style->warning('No values defined.');
-        } else {
-            $rows = [];
-            foreach ($values as $value) {
-                $rows[] = [$value->getName(), $value->getSelector()];
-            }
-
-            $style->table(['name', 'selector'], $rows);
+        $rows = [];
+        foreach ($task->getValues() as $value) {
+            $rows[] = [$value->getName(), $value->getSelector()];
         }
+
+        $style->table(['name', 'selector'], $rows);
     }
 }

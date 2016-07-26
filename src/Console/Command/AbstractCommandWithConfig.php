@@ -14,11 +14,6 @@ abstract class AbstractCommandWithConfig extends Command
         return $input->getOption('config');
     }
 
-    final protected function getConfigReader(InputInterface $input)
-    {
-        return new ConfigYamlReader($this->getConfigPath($input));
-    }
-
     final protected function getConfig(InputInterface $input)
     {
         $data = $this->getConfigReader($input)->getArrayFromFile();
@@ -27,5 +22,10 @@ abstract class AbstractCommandWithConfig extends Command
         $config->initFromArray($data);
 
         return $config;
+    }
+
+    private function getConfigReader(InputInterface $input)
+    {
+        return new ConfigYamlReader($this->getConfigPath($input));
     }
 }

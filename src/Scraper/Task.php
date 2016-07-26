@@ -2,10 +2,8 @@
 
 namespace WebScraper\Scraper;
 
-use WebScraper\Scraper\Exception\ParseException;
 use WebScraper\Scraper\Exception\RequestException;
-use WebScraper\Scraper\Result\Task as ResultTask;
-use WebScraper\Scraper\Result\Value as ResultValue;
+use WebScraper\Scraper\Result\Task as Result;
 
 class Task
 {
@@ -39,22 +37,18 @@ class Task
         return $this->request;
     }
 
-    public function run()
+    public function getResult()
     {
         try {
             $content = $this->request->getResponseContent();
         } catch (RequestException $e) {
-            return new ResultTask($e);
+            return new Result($e);
         }
 
-        $result = new ResultTask();
+        $result = new Result();
 
         foreach ($this->values as $value) {
-            try {
-                $result->addValue(new ResultValue($value->getName(), null, $value->parse($content)));
-            } catch (ParseException $e) {
-                $result->addValue(new ResultValue($value->getName(), $e));
-            }
+            $result->addValue($value->getResult($content));
         }
 
         return $result;
