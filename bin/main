@@ -13,6 +13,7 @@ $app = new Application('WebScraper', '0.1');
 $definition = $app->getDefinition();
 $definition->addOption(new InputOption('config', '-c', InputOption::VALUE_OPTIONAL, 'Path to config file', './web-scraper.yaml'));
 
+$app->add(new WebScraper\Console\Command\RunCommand());
 $app->add(new WebScraper\Console\Command\TestCommand());
 $app->add(new WebScraper\Console\Command\TasksCommand());
 $app->add(new WebScraper\Console\Command\ValidateCommand());
