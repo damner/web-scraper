@@ -7,6 +7,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use WebScraper\Scraper\Task;
+use RuntimeException;
 
 class RunCommand extends AbstractCommandWithConfig
 {
@@ -26,7 +27,13 @@ class RunCommand extends AbstractCommandWithConfig
             $values = array_replace($values, $this->getTaskValues($task));
         }
 
-        $output->writeln(json_encode($values, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+        $encoded = json_encode($values, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            throw new RuntimeException(sprintf('Json encode error: %s', json_last_error_msg()));
+        }
+
+        $output->writeln($encoded);
     }
 
     private function getSpecifiedTasks(InputInterface $input)
