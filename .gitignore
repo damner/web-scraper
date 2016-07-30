@@ -3,3 +3,4 @@ composer.lock
 vendor/
 web-scraper.phar
 web-scraper.yaml
+errors.yaml
